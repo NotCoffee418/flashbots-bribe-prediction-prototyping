@@ -9,6 +9,12 @@
 
   <ItemGroup>
     <PackageReference Include="CSharpScriptOperations" Version="1.4.2" />
+    <PackageReference Include="ShellProgressBar" Version="5.2.0" />
+    <PackageReference Include="System.IO.Pipelines" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BribePrototype.MLModel\BribePrototype.MLModel.csproj" />
   </ItemGroup>
 
 </Project>

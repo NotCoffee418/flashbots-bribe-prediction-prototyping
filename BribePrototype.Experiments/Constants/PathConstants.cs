@@ -6,7 +6,12 @@ internal static class PathConstants
     {
         public static string Dir { get => SetupPath(true, "RawData"); }
         public static string FlashbotsBlocks { get => SetupPath(false, Dir, "flashbots-blocks.json"); }
-        public static string EtherscanCongestion { get => SetupPath(false, Dir, "etherscan-congestion.csv"); }
+    }
+    
+    internal static class Dissected
+    {
+        public static string Dir { get => SetupPath(true, "DissectedData"); }
+        public static string FlashbotsBlocks { get => SetupPath(false, Dir, "dissected-blocks.json"); }
     }
 
     private static string SetupPath(bool isDir, params string[] relativePath) 
