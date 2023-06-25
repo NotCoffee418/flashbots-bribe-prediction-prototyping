@@ -57,13 +57,11 @@ public class FlashbotsRawBlockProcessor
 
                 // Apply the conversion function
                 T convertedBlock = convertFunc(block);
-                // Serialize the converted transaction
                 string serializedBlock = JsonSerializer.Serialize(convertedBlock);
 
                 // Write the converted transaction to the output file
                 if (!isFirstTx) streamWriter.Write(",");
                 else isFirstTx = false;
-
                 streamWriter.Write(serializedBlock);
             }
         }

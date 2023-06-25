@@ -1,4 +1,6 @@
-﻿namespace BribePrototype.MLModel.DataPrep.Preprocessing;
+﻿using System.Numerics;
+
+namespace BribePrototype.MLModel.DataPrep.Preprocessing;
 
 public static class FlashbotsBlockInterpreter
 {
@@ -17,18 +19,21 @@ public static class FlashbotsBlockInterpreter
 
         // Extract average bundle bribe
         List<decimal> bribePrices = new();
+        List<decimal> gasPrices = new();
+        List<int> bundlesWithBribe = new();
         foreach (var bundleKvp in bundles)
         {
-            // Only include flashbots uses
-            if (bundleKvp.Value.First().BundleType == "mempool")
-                continue;
-            
             // Calculate bundle bribe price
-            var bundleBribe = bundleKvp.Value.Sum(x => decimal.Parse(x.EthSentToFeeRecipient));
-            var bundleGasUsed = bundleKvp.Value.Sum(x => x.GasUsed);
-            bribePrices.Add(bundleBribe / bundleGasUsed);
-
-            // todo calc actual gas price
+            var bundleBribe = bundleKvp.Value.Sum(x => long.Parse(x.EthSentToFeeRecipient));
+            if (bundleBribe > 0)
+            {
+                var bundleBribeGasUsed = bundleKvp.Value.Where(x => x.EthSentToFeeRecipient != "0").Sum(x => x.GasUsed);
+                bribePrices.Add(bundleBribe / bundleBribeGasUsed);
+                bundlesWithBribe.Add(bundleKvp.Key);
+            }
+            
+            // Calculate gas pric
+            var gasPrice = bundleKvp.Value.Sum(x => long.Parse(x.GasPrice));
         }
 
 
@@ -37,7 +42,10 @@ public static class FlashbotsBlockInterpreter
         {
             BlockNumber = block.BlockNumber,
             NonFlashbotTxRatio = mempoolTxPercentage,
-            AvgBribePrice = bribePrices.Average()
+            AvgBribePrice = bribePrices.Average(),
+            BundlesWithBribeRatio = (float)bundlesWithBribe.Count / (float)bundles.Count,
+            AverageBribePrice = bribePrices.Average(),
+            AverageGasPrice = gasPrices.Average(),
         };
 
     }

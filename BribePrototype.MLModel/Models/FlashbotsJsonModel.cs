@@ -28,7 +28,7 @@ public class FlashbotsJsonModel
         public string ToAddress { get; set; }
 
         [JsonPropertyName("gas_used")]
-        public int GasUsed { get; set; }
+        public long GasUsed { get; set; }
 
         [JsonPropertyName("gas_price")]
         public string GasPrice { get; set; }
